@@ -3,20 +3,20 @@
 ```
     ╔══════════════════════════════════════════╗
     ║                                          ║
-    ║      ┌──────┐   ┌──────┐   ┌──────┐     ║
-    ║      │INBOX │──▶│SCAN  │──▶│TRIAGE│     ║
-    ║      │ ┌──┐ │   │ (◉‿◉)│   │ ⚠ !! │     ║
-    ║      │ │✉ │ │   │  /|\ │   │  /|\  │     ║
-    ║      │ └──┘ │   │  / \ │   │  / \  │     ║
-    ║      └──────┘   └──────┘   └──────┘     ║
+    ║      ┌──────┐   ┌──────┐   ┌────────┐   ║
+    ║      │RECIVE│──▶│CLASS │──▶│PRIORITY│   ║
+    ║      │ ┌──┐ │   │ (◉‿◉)│   │ ⚠ !!  │   ║
+    ║      │ │✉ │ │   │  /|\ │   │  /|\   │   ║
+    ║      │ └──┘ │   │  / \ │   │  / \   │   ║
+    ║      └──────┘   └──────┘   └────────┘   ║
     ║          ┌─────────────────────┐         ║
     ║          │    📮 POSTMAN 📮     │         ║
     ║          └─────────────────────┘         ║
-    ║      ┌──────┐              ┌──────┐     ║
-    ║      │REPLY │◀─────────────│ OUT  │     ║
-    ║      │  HQ  │              │ BOX  │     ║
-    ║      │ ⌨⌨⌨ │──────────────▶│  ➤➤  │     ║
-    ║      └──────┘              └──────┘     ║
+    ║      ┌──────┐              ┌───────┐    ║
+    ║      │DRAFT │◀─────────────│DELIVER│    ║
+    ║      │  ⌨⌨  │              │  ➤➤   │    ║
+    ║      │  ⌨⌨  │──────────────▶│  ➤➤   │    ║
+    ║      └──────┘              └───────┘    ║
     ║                                          ║
     ╚══════════════════════════════════════════╝
 ```
@@ -31,11 +31,11 @@ Built for the **LuffaNator (Agentic Track)** at AI London 2026.
 
 A user messages the Luffa bot. Five autonomous agents process it:
 
-1. **Receiver** — captures the incoming message from Luffa API
-2. **Classifier** — Gemini 2.0 Flash AI analyzes category + urgency + drafts a reply
-3. **Triage** — assesses priority, routes to the right team
-4. **Replier** — checks the knowledge base for auto-resolution, or uses the AI reply
-5. **Sender** — delivers the response back to the user on Luffa
+1. **Receive** — captures the incoming message from Luffa API
+2. **Classify** — Gemini 2.0 Flash AI analyzes category + urgency + drafts a reply
+3. **Priority** — assesses severity, routes to the right team
+4. **Draft** — checks the knowledge base for auto-resolution, or uses the AI reply
+5. **Deliver** — sends the response back to the user on Luffa
 
 Three background agents run independently:
 - **Incident Detector** — watches for patterns (3+ similar tickets in 10 min → declares incident, alerts admin)
