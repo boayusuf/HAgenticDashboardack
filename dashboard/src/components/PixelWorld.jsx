@@ -3,11 +3,11 @@ import { AGENT_PALETTES } from './PixelAgent'
 import SpeechBubble from './SpeechBubble'
 
 const BUILDINGS = [
-  { key: 'receiver',   name: 'RECEIVE',    x: 10, y: 48 },
+  { key: 'receiver',   name: 'INBOX',       x: 10, y: 48 },
   { key: 'classifier', name: 'CLASSIFY',   x: 30, y: 16 },
   { key: 'urgency',    name: 'PRIORITY',   x: 50, y: 56 },
   { key: 'replier',    name: 'DRAFT',      x: 70, y: 16 },
-  { key: 'sender',     name: 'DELIVER',    x: 90, y: 48 },
+  { key: 'sender',     name: 'OUTBOX',     x: 90, y: 48 },
 ]
 
 const TREES = [
