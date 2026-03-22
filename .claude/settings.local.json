@@ -26,7 +26,13 @@
       "WebFetch(domain:docs.luffa.ai)",
       "WebFetch(domain:www.luffa.ai)",
       "WebFetch(domain:userguide.luffa.im)",
-      "WebFetch(domain:robot.luffa.im)"
+      "WebFetch(domain:robot.luffa.im)",
+      "Bash(python3 -c \":*)",
+      "Bash(python -c \":*)",
+      "Bash(cscript //nologo \"C:\\\\Users\\\\yusuf\\\\HAgenticDashboardack\\\\make_shortcut.vbs\")",
+      "Read(//c/Users/yusuf/HAgenticDashboardack/$HOME/Desktop/**)",
+      "Read(//c/Users/yusuf/HAgenticDashboardack/$HOME/OneDrive/Desktop/**)",
+      "Bash(powershell -Command \"\n\\\\$ws = New-Object -ComObject WScript.Shell\n\\\\$shortcut = \\\\$ws.CreateShortcut\\('C:\\\\Users\\\\yusuf\\\\OneDrive\\\\Desktop\\\\Luffa Ticket Agent.lnk'\\)\n\\\\$shortcut.TargetPath = 'C:\\\\Users\\\\yusuf\\\\HAgenticDashboardack\\\\start-luffa.bat'\n\\\\$shortcut.WorkingDirectory = 'C:\\\\Users\\\\yusuf\\\\HAgenticDashboardack'\n\\\\$shortcut.Description = 'Luffa Ticket Agent - Autonomous Support System'\n\\\\$shortcut.Save\\(\\)\nWrite-Host 'Shortcut created'\n\")"
     ]
   }
 }
