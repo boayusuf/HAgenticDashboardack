@@ -117,6 +117,15 @@ export function assignTicket(id: number, assignedTo: string): Ticket | null {
   return getTicketById(id)
 }
 
+export function appendToTicket(id: number, message: string): Ticket | null {
+  const ticket = getTicketById(id)
+  if (!ticket) return null
+  const updated = ticket.message + '\n---\n' + message
+  db.run('UPDATE tickets SET message = ?, status = ? WHERE id = ?', [updated, 'open', id])
+  save()
+  return getTicketById(id)
+}
+
 export function updateTicketReply(id: number, reply: string): Ticket | null {
   db.run('UPDATE tickets SET reply = ? WHERE id = ?', [reply, id])
   save()

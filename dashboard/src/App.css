@@ -207,7 +207,11 @@ body {
   position: relative;
   width: 100%;
   height: 300px;
-  background: linear-gradient(180deg, #060d08 0%, #0a150a 40%, #0d1a0d 100%);
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(30, 60, 80, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(40, 70, 40, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 0%, rgba(20, 30, 60, 0.3) 0%, transparent 60%),
+    linear-gradient(180deg, #050a10 0%, #081208 30%, #0a150a 60%, #0d1a0d 100%);
   border: 1px solid #1a2a1a;
   border-radius: 4px;
   overflow: hidden;
@@ -355,7 +359,7 @@ body {
   border-radius: 2px;
 }
 
-.speech-bubble::after {
+.speech-bubble-above::after {
   content: '';
   position: absolute;
   top: 100%;
@@ -363,6 +367,22 @@ body {
   transform: translateX(-50%);
   border: 5px solid transparent;
   border-top-color: var(--agent-color);
+}
+
+.speech-bubble-below {
+  bottom: auto;
+  top: calc(100% + 8px);
+}
+
+.speech-bubble-below::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  top: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: var(--agent-color);
 }
 
 @keyframes bubblePop {
@@ -968,12 +988,40 @@ body {
 }
 
 .village-building-working {
-  transform: translate(-50%, -50%) scale(1.05);
+  transform: translate(-50%, -50%) scale(1.08);
   z-index: 15;
+  filter: brightness(1.2);
+}
+
+.village-building-working::before {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  background: radial-gradient(ellipse at center, var(--agent-color) 0%, transparent 70%);
+  opacity: 0.15;
+  z-index: -1;
+  animation: buildingGlow 1s ease-in-out infinite;
+  border-radius: 50%;
+}
+
+@keyframes buildingGlow {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.2; transform: scale(1.1); }
 }
 
 .village-building-done {
   z-index: 14;
+  filter: brightness(1.1);
+}
+
+.village-building-done::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  background: radial-gradient(ellipse at center, #00e676 0%, transparent 70%);
+  opacity: 0.1;
+  z-index: -1;
+  border-radius: 50%;
 }
 
 .building-sign {
@@ -995,7 +1043,11 @@ body {
   z-index: 25;
   pointer-events: none;
   transform: translate(-50%, -50%);
-  transition: left 1s ease-in-out, top 1s ease-in-out;
+  transition: left 0.8s ease-in-out, top 0.8s ease-in-out;
+}
+
+.postman-container.postman-returning {
+  transition: left 0.4s ease-in, top 0.4s ease-in;
 }
 
 .postman-walking {

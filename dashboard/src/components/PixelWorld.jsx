@@ -433,6 +433,7 @@ export default function PixelWorld({ agentStatus, letterPosition, letterVisible 
               message={st.message}
               color={p.accent}
               visible={st.status === 'working' || st.status === 'done'}
+              position={b.y < 30 ? 'below' : 'above'}
             />
             <Building color={p.accent} dark={p.dark} state={st.status} type={b.key} />
             <div className="building-sign" style={{ '--sign-color': p.accent }}>{b.name}</div>
@@ -441,7 +442,7 @@ export default function PixelWorld({ agentStatus, letterPosition, letterVisible 
       })}
 
       {/* Postman */}
-      <div className="postman-container"
+      <div className={`postman-container${!letterVisible ? ' postman-returning' : ''}`}
         style={{ left: `${postmanTarget.x}%`, top: `${postmanTarget.y - 12}%` }}>
         <div className={letterVisible && letterPosition >= 0 ? 'postman-walking' : ''}>
           <Postman hasLetter={letterVisible} facingRight={facingRight} />
