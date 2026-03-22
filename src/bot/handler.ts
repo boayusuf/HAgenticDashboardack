@@ -155,13 +155,14 @@ export async function processEnvelopes(envelopes: LuffaEnvelope[]): Promise<void
       if (!ticket) continue
 
       // Stage 5: SENDER — dispatch reply
+      const outMessage = `[Ticket #${ticket.id}] ${finalReply}\n\nReply with #${ticket.id} <message> to follow up.`
       setAgentStatus('sender', 'working', `Sending to ${senderUid.slice(0, 8)}...`)
       addActivity('sender', `Dispatching reply...`, 'info')
       await delay(600)
       if (isGroup && groupId) {
-        await sendGroup(groupId, finalReply)
+        await sendGroup(groupId, outMessage)
       } else {
-        await sendDM(senderUid, finalReply)
+        await sendDM(senderUid, outMessage)
       }
       await delay(500)
       setAgentStatus('sender', 'done', 'Delivered!')
