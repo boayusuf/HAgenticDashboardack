@@ -7,6 +7,7 @@ import { escalateIfCritical } from '../agents/escalation'
 import { scheduleVerification } from '../agents/verification'
 import { addActivity } from '../agents/activity'
 import { tryAutoResolve } from '../agents/resolver'
+import { detectIncident } from '../agents/incident'
 import {
   isShortMessage,
   hasPendingConversation,
@@ -77,29 +78,31 @@ export async function processEnvelopes(envelopes: LuffaEnvelope[]): Promise<void
       // Stage 1: RECEIVER — message received
       setAgentStatus('receiver', 'working', `Incoming from ${senderUid.slice(0, 8)}...`)
       addActivity('receiver', `New message from ${senderUid.slice(0, 8)}...`, 'info')
-      await delay(800)
+      await delay(1200)
       setAgentStatus('receiver', 'done', 'Message captured')
+      await delay(300)
 
       // Stage 2: CLASSIFIER — AI analysis
-      await delay(400)
       setAgentStatus('classifier', 'working', 'Analyzing with Gemini...')
       addActivity('classifier', 'Running AI classification...', 'info')
       const classification = await classify(finalMessage)
+      // Ensure classifier stays visible for at least 1.5s
+      await delay(1500)
       setAgentStatus('classifier', 'done', `${classification.category} detected`)
       addActivity('classifier', `Classified: ${classification.category}`, 'success')
+      await delay(300)
 
       // Stage 3: URGENCY — priority assessment
-      await delay(600)
       setAgentStatus('urgency', 'working', `Assessing severity...`)
       addActivity('urgency', `Evaluating urgency...`, 'info')
-      await delay(500)
+      await delay(1500)
       setAgentStatus('urgency', 'done', `${classification.urgency} priority`)
       addActivity('urgency', `Priority: ${classification.urgency}`, classification.urgency === 'Critical' ? 'error' : classification.urgency === 'High' ? 'warning' : 'info')
+      await delay(300)
 
       const assignedTo = ROUTE_MAP[classification.category] || 'support-team'
 
       // Stage 4: REPLIER — draft response
-      await delay(400)
       setAgentStatus('replier', 'working', 'Drafting reply...')
       addActivity('replier', 'Generating response...', 'info')
 
@@ -108,7 +111,7 @@ export async function processEnvelopes(envelopes: LuffaEnvelope[]): Promise<void
       const finalReply = autoResolution || classification.reply
       const ticketStatus = autoResolution ? 'resolved' : 'open'
 
-      await delay(600)
+      await delay(1500)
       setAgentStatus('replier', 'done', autoResolution ? 'Auto-resolved!' : 'Reply ready')
       addActivity('replier', autoResolution ? 'Auto-resolved with KB match' : 'Reply drafted', 'success')
 
@@ -130,22 +133,23 @@ export async function processEnvelopes(envelopes: LuffaEnvelope[]): Promise<void
       if (!ticket) continue
 
       // Stage 5: SENDER — dispatch reply
-      await delay(400)
       setAgentStatus('sender', 'working', `Sending to ${senderUid.slice(0, 8)}...`)
       addActivity('sender', `Dispatching reply...`, 'info')
+      await delay(800)
       if (isGroup && groupId) {
         await sendGroup(groupId, finalReply)
       } else {
         await sendDM(senderUid, finalReply)
       }
-      await delay(300)
+      await delay(700)
       setAgentStatus('sender', 'done', 'Delivered!')
       addActivity('sender', `Reply sent → ${senderUid.slice(0, 8)}...`, 'success')
 
       console.log(`[handler] Ticket #${ticket.id}: ${classification.category}/${classification.urgency} → ${assignedTo}${autoResolution ? ' (auto-resolved)' : ''}`)
 
-      // post-pipeline actions
+      // post-pipeline: autonomous agent actions
       await escalateIfCritical(ticket)
+      await detectIncident(ticket) // pattern detection across tickets
 
       if (ticket.status === 'resolved') {
         scheduleVerification(ticket.id, ticket.uid)

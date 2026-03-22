@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import PixelWorld from './components/PixelWorld'
 import TicketFeed from './components/TicketFeed'
 import StatsBar from './components/StatsBar'
@@ -6,10 +6,11 @@ import CommandPanel from './components/CommandPanel'
 import ActivityLog from './components/ActivityLog'
 import './App.css'
 
+const AGENT_KEYS = ['receiver', 'classifier', 'urgency', 'replier', 'sender']
+
 function normalizeAgentStatus(data) {
   const normalized = {}
-  const agents = ['receiver', 'classifier', 'urgency', 'replier', 'sender']
-  agents.forEach(key => {
+  AGENT_KEYS.forEach(key => {
     const val = data[key]
     if (!val) {
       normalized[key] = { status: 'idle', message: '', lastActive: 0 }
@@ -37,12 +38,9 @@ function App() {
     sender:     { status: 'idle', message: '', lastActive: 0 },
   })
   const [activities, setActivities] = useState([])
-  const [letterPosition, setLetterPosition] = useState(-1)
-  const [letterVisible, setLetterVisible] = useState(false)
   const [filters, setFilters] = useState({ urgency: null, category: null })
-  const prevTicketCount = useRef(0)
-  const animating = useRef(false)
 
+  // Poll agent status faster (500ms) so postman tracks pipeline in real-time
   useEffect(() => {
     const fetchStatus = async () => {
       try {
@@ -52,7 +50,7 @@ function App() {
       } catch {}
     }
     fetchStatus()
-    const interval = setInterval(fetchStatus, 1000)
+    const interval = setInterval(fetchStatus, 500)
     return () => clearInterval(interval)
   }, [])
 
@@ -77,16 +75,8 @@ function App() {
         fetch('/api/tickets?limit=50'),
         fetch('/api/stats'),
       ])
-      const ticketsData = await ticketsRes.json()
-      const statsData = await statsRes.json()
-
-      if (ticketsData.length > 0 && ticketsData.length > prevTicketCount.current) {
-        triggerLetterAnimation()
-      }
-      prevTicketCount.current = ticketsData.length
-
-      setTickets(ticketsData)
-      setStats(statsData)
+      setTickets(await ticketsRes.json())
+      setStats(await statsRes.json())
     } catch {}
   }, [])
 
@@ -96,38 +86,22 @@ function App() {
     return () => clearInterval(interval)
   }, [fetchData])
 
-  const triggerLetterAnimation = () => {
-    if (animating.current) return
-    animating.current = true
-    setLetterVisible(true)
-    setLetterPosition(0)
-
-    const steps = [0, 1, 2, 3, 4]
-    steps.forEach((step, i) => {
-      setTimeout(() => {
-        setLetterPosition(step)
-      }, i * 600)
-    })
-
-    setTimeout(() => {
-      setLetterVisible(false)
-      setLetterPosition(-1)
-      animating.current = false
-    }, steps.length * 600 + 400)
-  }
-
-  useEffect(() => {
-    const agents = ['receiver', 'classifier', 'urgency', 'replier', 'sender']
-    const workingIndex = agents.findIndex(a => {
-      const st = agentStatus[a]
+  // Postman position: tracks the FURTHEST agent that's working or done (not idle)
+  // This means the postman follows the pipeline as it progresses
+  const { letterPosition, letterVisible } = (() => {
+    let lastActive = -1
+    for (let i = 0; i < AGENT_KEYS.length; i++) {
+      const st = agentStatus[AGENT_KEYS[i]]
       const status = typeof st === 'string' ? st : (st && st.status) || 'idle'
-      return status === 'working'
-    })
-    if (workingIndex >= 0 && !letterVisible) {
-      setLetterVisible(true)
-      setLetterPosition(workingIndex)
+      if (status === 'working' || status === 'done') {
+        lastActive = i
+      }
     }
-  }, [agentStatus, letterVisible])
+    return {
+      letterPosition: lastActive >= 0 ? lastActive : 0,
+      letterVisible: lastActive >= 0,
+    }
+  })()
 
   const handleFilterClick = (type, value) => {
     if (!type) {

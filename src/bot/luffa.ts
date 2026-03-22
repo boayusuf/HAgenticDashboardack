@@ -48,7 +48,12 @@ export async function sendDM(uid: string, text: string): Promise<boolean> {
       }),
     })
     const data = await res.json()
-    return data?.code !== 500
+    // Luffa API returns various response shapes — treat as success unless explicit 500
+    if (data?.code === 500) {
+      console.error('[luffa] sendDM rejected:', JSON.stringify(data))
+      return false
+    }
+    return true
   } catch (err) {
     console.error('[luffa] sendDM error:', (err as Error).message)
     return false
@@ -68,7 +73,11 @@ export async function sendGroup(groupId: string, text: string): Promise<boolean>
       }),
     })
     const data = await res.json()
-    return data?.code !== 500
+    if (data?.code === 500) {
+      console.error('[luffa] sendGroup rejected:', JSON.stringify(data))
+      return false
+    }
+    return true
   } catch (err) {
     console.error('[luffa] sendGroup error:', (err as Error).message)
     return false

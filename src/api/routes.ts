@@ -17,6 +17,7 @@ import { handleCommand } from '../bot/commands'
 import { sendDM, sendGroup } from '../bot/luffa'
 import { addActivity } from '../agents/activity'
 import { scheduleVerification } from '../agents/verification'
+import { getActiveIncidents } from '../agents/incident'
 
 const router = Router()
 
@@ -61,6 +62,10 @@ router.get('/agent-status', (_req: Request, res: Response) => {
 
 router.get('/activity', (_req: Request, res: Response) => {
   res.json(getActivities())
+})
+
+router.get('/incidents', (_req: Request, res: Response) => {
+  res.json(getActiveIncidents())
 })
 
 router.get('/tickets/search', (req: Request, res: Response) => {
@@ -123,9 +128,9 @@ router.post('/tickets/:id/reply', async (req: Request, res: Response) => {
   // Send reply to user via Luffa
   let sent = false
   if (ticket.isGroup && ticket.groupId) {
-    sent = await sendGroup(ticket.groupId, `[Re: Ticket #${id}] ${reply}`)
+    sent = await sendGroup(ticket.groupId, reply)
   } else {
-    sent = await sendDM(ticket.uid, `[Re: Ticket #${id}] ${reply}`)
+    sent = await sendDM(ticket.uid, reply)
   }
 
   if (!sent) {

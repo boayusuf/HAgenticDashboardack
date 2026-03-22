@@ -6,7 +6,7 @@ import cors from 'cors'
 import path from 'path'
 import router from './api/routes'
 import { startPolling } from './bot/poller'
-import { checkStaleTickets } from './agents/followup'
+// import { checkStaleTickets } from './agents/followup'
 import { initDatabase } from './db/database'
 
 async function main() {
@@ -28,9 +28,7 @@ async function main() {
     console.log(`[server] Running on port ${PORT}`)
     startPolling()
 
-    // check for stale tickets every 30 minutes (only tickets idle > 2 hours)
-    setInterval(checkStaleTickets, 30 * 60 * 1000)
-    console.log('[server] Follow-up checker running every 30 minutes')
+    // follow-up disabled — no unsolicited messages to users
   })
 }
 

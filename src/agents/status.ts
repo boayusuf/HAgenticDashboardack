@@ -6,7 +6,7 @@ export interface AgentState {
 
 type AgentName = 'receiver' | 'classifier' | 'urgency' | 'replier' | 'sender'
 
-const RESET_DELAY = 4000
+const RESET_DELAY = 6000
 
 const agents: Record<AgentName, AgentState> = {
   receiver: { status: 'idle', message: '', lastActive: Date.now() },

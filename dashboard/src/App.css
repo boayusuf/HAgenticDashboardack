@@ -163,24 +163,16 @@ body {
   box-shadow: 0 0 10px color-mix(in srgb, var(--filter-color) 30%, transparent);
 }
 
-.stat-filter-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--filter-color);
+.stat-filter-icon {
+  font-size: 8px;
   flex-shrink: 0;
-}
-
-.stat-filter-dot.pulse-critical {
-  animation: urgencyPulse 0.8s ease-in-out infinite;
-}
-
-@keyframes urgencyPulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 2px var(--filter-color); }
-  50% { opacity: 0.4; box-shadow: 0 0 8px var(--filter-color); }
+  font-family: sans-serif;
+  line-height: 1;
 }
 
 .stat-filter-name {
   font-size: 7px;
+  letter-spacing: 0.3px;
 }
 
 .stat-filter-count {
@@ -215,23 +207,23 @@ body {
   position: relative;
   width: 100%;
   height: 300px;
-  background: linear-gradient(135deg, #0a0a1a 0%, #0d1020 50%, #0a0a1a 100%);
-  border: 1px solid #1a2a3a;
+  background: linear-gradient(180deg, #060d08 0%, #0a150a 40%, #0d1a0d 100%);
+  border: 1px solid #1a2a1a;
   border-radius: 4px;
   overflow: hidden;
   image-rendering: pixelated;
-  box-shadow: 0 0 20px rgba(78, 205, 196, 0.05), inset 0 0 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 20px rgba(78, 205, 196, 0.05), inset 0 0 40px rgba(0, 0, 0, 0.4);
 }
 
 .tile-floor {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, #151530 1px, transparent 1px),
-    linear-gradient(180deg, #151530 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(90deg, rgba(20, 50, 20, 0.2) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(20, 50, 20, 0.2) 1px, transparent 1px);
+  background-size: 32px 32px;
   background-color: transparent;
-  opacity: 0.25;
+  opacity: 0.4;
 }
 
 .scanlines {
@@ -936,6 +928,92 @@ body {
 
 .ticket-time {
   color: #2a3a4a;
+}
+
+/* ===== POKEMON VILLAGE ===== */
+.village-path {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.path-glow-line {
+  animation: pathGlow 1.2s ease-in-out infinite;
+}
+
+@keyframes pathGlow {
+  0%, 100% { opacity: 0.08; }
+  50% { opacity: 0.2; }
+}
+
+.village-tree {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.village-building {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  transition: transform 0.3s ease;
+}
+
+.village-building-working {
+  transform: translate(-50%, -50%) scale(1.05);
+  z-index: 15;
+}
+
+.village-building-done {
+  z-index: 14;
+}
+
+.building-sign {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  color: var(--sign-color, #c0a060);
+  text-shadow: 0 0 6px var(--sign-color), 0 1px 3px rgba(0, 0, 0, 0.9);
+  background: rgba(20, 10, 5, 0.85);
+  border: 1px solid rgba(80, 60, 30, 0.5);
+  padding: 2px 5px;
+  text-align: center;
+  white-space: nowrap;
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+
+.postman-container {
+  position: absolute;
+  z-index: 25;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: left 1s ease-in-out, top 1s ease-in-out;
+}
+
+.postman-walking {
+  animation: postmanWalk 0.3s steps(2) infinite;
+}
+
+@keyframes postmanWalk {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.carried-letter {
+  animation: letterBob 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes letterBob {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-1px); }
 }
 
 /* ===== TICKET MODAL ===== */
