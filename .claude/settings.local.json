@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(kill %1)",
+      "Bash(netstat -aon)",
+      "Bash(taskkill:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npx vite:*)",
+      "Bash(curl -s http://localhost:3000/api/agent-status)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(curl -s http://localhost:3000/api/tickets)",
+      "Bash(curl:*)",
+      "Bash(sqlite3:*)",
+      "Bash(node:*)",
+      "Bash(powershell -Command \"Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | Select-Object OwningProcess | ForEach-Object { Get-Process -Id $_ningProcess | Select-Object Id, Path }\")",
+      "Bash(tasklist)",
+      "Bash(powershell -Command \"Get-CimInstance Win32_Process | Where-Object { \\\\$_.CommandLine -like '*index.ts*' -or \\\\$_.CommandLine -like '*tickets*' } | Select-Object ProcessId, CreationDate, CommandLine\" 2>&1)",
+      "Bash(powershell -Command \"Get-NetTCPConnection -LocalPort 3000 -State Listen | Select-Object OwningProcess\" 2>&1)",
+      "Bash(powershell -Command \"Get-NetTCPConnection -OwningProcess 31540 -ErrorAction SilentlyContinue | Select-Object LocalPort, State\" 2>&1)",
+      "Bash(powershell -Command \"\\(Get-CimInstance Win32_Process -Filter 'ProcessId=20856'\\).CommandLine\" 2>&1)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(gh api:*)",
+      "Bash(wmic process:*)",
+      "Bash(grep:*)",
+      "WebFetch(domain:luffa.ai)",
+      "WebFetch(domain:docs.luffa.ai)",
+      "WebFetch(domain:www.luffa.ai)",
+      "WebFetch(domain:userguide.luffa.im)",
+      "WebFetch(domain:robot.luffa.im)"
+    ]
+  }
+}

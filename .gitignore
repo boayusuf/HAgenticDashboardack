@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+tickets.db
+dashboard/build/
+dashboard/node_modules/
+*.log
+.DS_Store
